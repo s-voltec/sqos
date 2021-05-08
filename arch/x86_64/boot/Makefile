@@ -1,5 +1,5 @@
 # constants
-OBJS := mb2.o boot.o
+OBJS := mb2.o boot.o mm.o
 BOOTOBJS := $(addprefix $(BOOTDIR)/, $(OBJS))
 OBJECTS += $(BOOTOBJS)
 

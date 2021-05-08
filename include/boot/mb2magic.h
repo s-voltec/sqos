@@ -7,5 +7,6 @@
 #else
 #error MB2_H_ARCH is used for unsupported architecture.
 #endif
+#define MB2_MAGIC 0x36d76289
 
 #endif
