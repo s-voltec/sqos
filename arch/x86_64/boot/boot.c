@@ -1,5 +1,7 @@
+#include <arch/serial.h>
 #include <arch/boot/context.h>
 #include <arch/boot/mm.h>
+#include <arch/boot/serial.h>
 #include <boot/mb2.h>
 #include <types.h>
 
@@ -7,13 +9,19 @@ BootContext bootContext;
 static int initBootContext(MB2BootInfo *bootInfo);
 
 int boot_main(u32 paddrWidth, MB2BootInfo *bootInfo, u32 magic) {
+  // serialポートを初期化する。
+  initBootSerial(SERIAL_COM1);
+
+  // Multiboot2データの処理。
   if(magic != MB2_MAGIC) {
+    bootSerialPrint(SERIAL_COM1, "Multiboot2 is required, but is not supported.\n");
     return -1;
   }
   if(initBootContext(bootInfo) != 0) {
     return -1;
   }
 
+  bootSerialPrint(SERIAL_COM1, "boot process completed.\n");
   return 0;
 }
 
@@ -21,6 +29,7 @@ static int copyMemoryMap(MB2MemoryMapTag *t) {
   u32 num = (t->size - sizeof(MB2MemoryMapTag)) / t->entrySize;
   bootContext.numMBMMap = num;
   if(num >= BOOT_CONTEXT_MBMMAP_MAX) {
+    bootSerialPrint(SERIAL_COM1, "too many memory map entry.");
     return -1;
   }
 

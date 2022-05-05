@@ -1,5 +1,5 @@
 # constants
-OBJS := mb2.o boot.o mm.o
+OBJS := mb2.o boot.o serial.o bootSerial.o mm.o
 BOOTOBJS := $(addprefix $(BOOTDIR)/, $(OBJS))
 OBJECTS += $(BOOTOBJS)
 
@@ -9,6 +9,10 @@ boot.elf: $(BOOTDIR)/boot.lds $(BOOTOBJS)
 
 $(BOOTDIR)/%.o: $(BOOTDIR)/%.c $(HEADERS)
 	$(CC) $(CFLAGS) -m32 -Wa,--32 -o $(BOOTDIR)/$*.o $(BOOTDIR)/$*.c
+
+# BOOTDIRに無いソースのオブジェクトが必要な場合、ARCHDIRから持ってくる。
+$(BOOTDIR)/%.o: $(ARCHDIR)/%.c $(HEADERS)
+	$(CC) $(CFLAGS) -m32 -Wa,--32 -o $(BOOTDIR)/$*.o $(ARCHDIR)/$*.c
 
 $(BOOTDIR)/%.o: $(BOOTDIR)/%.S $(HEADERS)
 	$(CC) $(CFLAGS) -m32 -Wa,--32 -o $(BOOTDIR)/$*.o $(BOOTDIR)/$*.S

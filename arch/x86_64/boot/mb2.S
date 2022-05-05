@@ -43,3 +43,19 @@ l2:
 loop:
   hlt
   jmp loop
+
+  .global in8
+  # u8 in8(u16 port)
+in8:
+  mov dx, [esp+4]
+  test eax, eax
+  in al, dx
+  ret
+
+  .global out8
+  # void out8(u16 port, u8 data)
+out8:
+  mov dx, [esp+4]
+  mov al, [esp+8]
+  out dx, al
+  ret

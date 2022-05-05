@@ -1,6 +1,8 @@
 #include <arch/boot/context.h>
 #include <arch/boot/mm.h>
+#include <arch/boot/serial.h>
 #include <arch/page.h>
+#include <arch/serial.h>
 #include <stddef.h>
 
 // メモリ管理処理。
@@ -45,6 +47,9 @@ int initBootMMap(MB2BootInfo *bootInfo) {
 
 int allocBootMMap(BootMMap **pMap) {
   if(bootContext.freeMMapEnt == NULL) {
+    // あらかじめコピー元の要素数をチェックしているので、足りなくなることはないはず。
+    // だが、コピー先配列の長さに番兵の要素を考慮していないので、コピー元要素数が最大の場合に足りなくなる。
+    bootSerialPrint(SERIAL_COM1, "BUG: unable to allocate boot memory map entry.\n");
     return -1;
   }
 
